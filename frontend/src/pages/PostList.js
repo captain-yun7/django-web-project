@@ -1,9 +1,3 @@
-/**
- * PostList 페이지
- * - 게시글 목록을 표시합니다.
- * - 검색 기능을 제공합니다.
- */
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { postAPI } from '../services/api';
@@ -53,7 +47,13 @@ const PostList = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ko-KR');
+    const now = new Date();
+    const isToday = date.toDateString() === now.toDateString();
+    
+    if (isToday) {
+      return date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    }
+    return date.toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' }).replace('. ', '.').replace('.', '');
   };
 
   if (loading) {
@@ -61,67 +61,72 @@ const PostList = () => {
   }
 
   return (
-    <div className="post-list-page">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2>게시판</h2>
-        <Link to="/posts/create" className="btn btn-primary">글쓰기</Link>
+    <div className="board-container">
+      <div className="board-header">
+        <h2>자유게시판</h2>
+        <span style={{ fontSize: '12px', color: '#666' }}>총 {posts.length}개</span>
       </div>
 
-      {/* 검색 폼 */}
+      {posts.length === 0 ? (
+        <div className="empty-list">게시글이 없습니다.</div>
+      ) : (
+        <table className="post-table">
+          <thead>
+            <tr>
+              <th className="num">번호</th>
+              <th className="title">제목</th>
+              <th className="author">글쓴이</th>
+              <th className="date">날짜</th>
+              <th className="views">조회</th>
+            </tr>
+          </thead>
+          <tbody>
+            {posts.map((post) => (
+              <tr key={post.id}>
+                <td className="num">{post.id}</td>
+                <td className="title">
+                  <Link to={`/posts/${post.id}`}>
+                    {post.title}
+                    {post.comment_count > 0 && (
+                      <span className="comment-count">[{post.comment_count}]</span>
+                    )}
+                  </Link>
+                </td>
+                <td className="author">{post.author_name}</td>
+                <td className="date">{formatDate(post.created_at)}</td>
+                <td className="views">{post.views}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {/* 검색 */}
       <form onSubmit={handleSearch} className="search-box">
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="검색어를 입력하세요"
+          placeholder="검색어 입력"
         />
-        <button type="submit" className="btn btn-primary">검색</button>
+        <button type="submit" className="btn">검색</button>
       </form>
-
-      {/* 게시글 목록 */}
-      {posts.length === 0 ? (
-        <div className="card">
-          <p style={{ textAlign: 'center' }}>게시글이 없습니다.</p>
-        </div>
-      ) : (
-        <ul className="post-list">
-          {posts.map((post) => (
-            <li key={post.id} className="post-item">
-              <Link to={`/posts/${post.id}`}>
-                <h3>{post.title}</h3>
-              </Link>
-              <div className="post-meta">
-                <span>작성자: {post.author_name}</span>
-                <span style={{ margin: '0 10px' }}>|</span>
-                <span>조회수: {post.views}</span>
-                <span style={{ margin: '0 10px' }}>|</span>
-                <span>댓글: {post.comment_count}</span>
-                <span style={{ margin: '0 10px' }}>|</span>
-                <span>{formatDate(post.created_at)}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
         <div className="pagination">
-          <button
-            onClick={() => setPage(p => Math.max(1, p - 1))}
-            disabled={page === 1}
-          >
-            이전
-          </button>
-          <span>{page} / {totalPages}</span>
-          <button
-            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-            disabled={page === totalPages}
-          >
-            다음
-          </button>
+          <button onClick={() => setPage(1)} disabled={page === 1}>{'<<'}</button>
+          <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>{'<'}</button>
+          <span className="current">{page}</span>
+          <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>{'>'}</button>
+          <button onClick={() => setPage(totalPages)} disabled={page === totalPages}>{'>>'}</button>
         </div>
       )}
+
+      {/* 글쓰기 버튼 (플로팅) */}
+      <div className="board-actions">
+        <Link to="/posts/create" className="btn btn-primary">+</Link>
+      </div>
     </div>
   );
 };

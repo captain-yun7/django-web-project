@@ -5,16 +5,14 @@
  */
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header';
-import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import PostList from './pages/PostList';
 import PostDetail from './pages/PostDetail';
 import PostCreate from './pages/PostCreate';
-import Profile from './pages/Profile';
 import './App.css';
 
 function App() {
@@ -25,13 +23,12 @@ function App() {
           <Header />
           <main className="main-content">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Navigate to="/posts" replace />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/posts" element={<PostList />} />
               <Route path="/posts/:id" element={<PostDetail />} />
               <Route path="/posts/create" element={<PostCreate />} />
-              <Route path="/profile" element={<Profile />} />
             </Routes>
           </main>
         </div>
