@@ -37,7 +37,7 @@ const Login = () => {
             <div className="auth-row">
               <label htmlFor="email">이메일</label>
               <input
-                type="email"
+                type="text"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

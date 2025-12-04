@@ -7,8 +7,8 @@
 
 import axios from 'axios';
 
-// API 기본 URL 설정
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+// API 기본 URL 설정 (프록시 사용 시 상대 경로)
+const API_URL = '/api/';
 
 // axios 인스턴스 생성
 const api = axios.create({
@@ -69,31 +69,31 @@ api.interceptors.response.use(
 export const authAPI = {
   // 로그인
   login: async (email, password) => {
-    const response = await api.post('/token/', { email, password });
+    const response = await api.post('token/', { email, password });
     return response.data;
   },
 
   // 회원가입
   register: async (userData) => {
-    const response = await api.post('/accounts/register/', userData);
+    const response = await api.post('accounts/register/', userData);
     return response.data;
   },
 
   // 프로필 조회
   getProfile: async () => {
-    const response = await api.get('/accounts/profile/');
+    const response = await api.get('accounts/profile/');
     return response.data;
   },
 
   // 프로필 수정
   updateProfile: async (data) => {
-    const response = await api.patch('/accounts/profile/', data);
+    const response = await api.patch('accounts/profile/', data);
     return response.data;
   },
 
   // 비밀번호 변경
   changePassword: async (oldPassword, newPassword) => {
-    const response = await api.post('/accounts/change-password/', {
+    const response = await api.post('accounts/change-password/', {
       old_password: oldPassword,
       new_password: newPassword,
     });
@@ -108,31 +108,31 @@ export const authAPI = {
 export const postAPI = {
   // 게시글 목록
   getList: async (params = {}) => {
-    const response = await api.get('/posts/', { params });
+    const response = await api.get('posts/', { params });
     return response.data;
   },
 
   // 게시글 상세
   getDetail: async (id) => {
-    const response = await api.get(`/posts/${id}/`);
+    const response = await api.get(`posts/${id}/`);
     return response.data;
   },
 
   // 게시글 생성
   create: async (data) => {
-    const response = await api.post('/posts/', data);
+    const response = await api.post('posts/', data);
     return response.data;
   },
 
   // 게시글 수정
   update: async (id, data) => {
-    const response = await api.patch(`/posts/${id}/`, data);
+    const response = await api.patch(`posts/${id}/`, data);
     return response.data;
   },
 
   // 게시글 삭제
   delete: async (id) => {
-    const response = await api.delete(`/posts/${id}/`);
+    const response = await api.delete(`posts/${id}/`);
     return response.data;
   },
 
@@ -140,7 +140,7 @@ export const postAPI = {
   uploadFile: async (postId, file) => {
     const formData = new FormData();
     formData.append('file', file);
-    const response = await api.post(`/posts/${postId}/upload_file/`, formData, {
+    const response = await api.post(`posts/${postId}/upload_file/`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;
@@ -148,7 +148,7 @@ export const postAPI = {
 
   // 검색
   search: async (query) => {
-    const response = await api.get('/search/', { params: { q: query } });
+    const response = await api.get('search/', { params: { q: query } });
     return response.data;
   },
 };
@@ -159,7 +159,7 @@ export const postAPI = {
 
 export const categoryAPI = {
   getList: async () => {
-    const response = await api.get('/categories/');
+    const response = await api.get('categories/');
     return response.data;
   },
 };
@@ -170,17 +170,17 @@ export const categoryAPI = {
 
 export const commentAPI = {
   getList: async (postId) => {
-    const response = await api.get(`/posts/${postId}/comments/`);
+    const response = await api.get(`posts/${postId}/comments/`);
     return response.data;
   },
 
   create: async (postId, content) => {
-    const response = await api.post(`/posts/${postId}/comments/`, { content });
+    const response = await api.post(`posts/${postId}/comments/`, { content });
     return response.data;
   },
 
   delete: async (postId, commentId) => {
-    const response = await api.delete(`/posts/${postId}/comments/${commentId}/`);
+    const response = await api.delete(`posts/${postId}/comments/${commentId}/`);
     return response.data;
   },
 };

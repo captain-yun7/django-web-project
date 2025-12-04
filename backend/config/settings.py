@@ -7,9 +7,13 @@ Django 설정 파일
 import os
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 
 # 프로젝트 기본 경로
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# .env 파일 로드
+load_dotenv(BASE_DIR / '.env')
 
 # 보안 키 (환경 변수에서 가져옴)
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-in-production')
@@ -175,7 +179,12 @@ SIMPLE_JWT = {
 # =====================================
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+    "http://localhost:3003",
+    "http://localhost:3004",
+    "http://localhost:3005",
+    "http://localhost:3006"    
 ]
 CORS_ALLOW_CREDENTIALS = True
 

@@ -44,3 +44,6 @@ Thumbs.db
 
 # Docker
 *.log
+# Local environment files
+backend/.env
+frontend/.env.development
