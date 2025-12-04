@@ -104,20 +104,23 @@ REACT_APP_API_URL=http://localhost:8000/api
 ### 백엔드 (로컬 개발)
 
 ```bash
+# 시스템 의존성 설치 (Ubuntu/Debian)
+sudo apt update && sudo apt install -y pkg-config python3-dev default-libmysqlclient-dev build-essential
+
 cd backend
 
 # 가상환경 생성 및 활성화
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # 의존성 설치
 pip install -r requirements.txt
 
 # 데이터베이스 마이그레이션
-python manage.py migrate
+python3 manage.py migrate
 
 # 개발 서버 실행
-python manage.py runserver
+python3 manage.py runserver
 ```
 
 ### 프론트엔드 (로컬 개발)
