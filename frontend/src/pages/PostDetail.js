@@ -102,6 +102,21 @@ const PostDetail = () => {
           {post.content}
         </div>
 
+        {post.attachments && post.attachments.length > 0 && (
+          <div className="post-view-attachments">
+            <h4>첨부파일</h4>
+            <ul>
+              {post.attachments.map((file) => (
+                <li key={file.id}>
+                  <a href={file.file} download target="_blank" rel="noopener noreferrer">
+                    {file.original_name} ({(file.file_size / 1024).toFixed(1)} KB)
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className="post-view-actions">
           <Link to="/posts" className="btn">목록</Link>
           <div>

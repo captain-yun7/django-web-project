@@ -78,7 +78,8 @@ django-web-project/
 │   └── init.sql               # DB 초기화 SQL
 │
 ├── docker-compose.yml         # Docker 컨테이너 구성
-└── setup.sh                   # 자동 설치 스크립트
+├── auto-setup.sh              # 자동 설치 스크립트 (Ubuntu)
+└── auto-setup-wsl.sh          # 자동 설치 스크립트 (WSL)
 ```
 
 ---
@@ -148,8 +149,11 @@ class Attachment(models.Model):
 
 ```javascript
 // axios를 사용한 API 호출
+// Docker 환경에서는 환경 변수 사용, 로컬에서는 프록시 사용
+const API_URL = process.env.REACT_APP_API_URL || '/api/';
+
 const api = axios.create({
-    baseURL: '/api/',
+    baseURL: API_URL,
     headers: { 'Content-Type': 'application/json' }
 });
 
@@ -163,24 +167,48 @@ api.interceptors.request.use((config) => {
 });
 ```
 
+### 4.5 게시글 Serializer (`backend/apps/core/serializers.py`)
+
+```python
+class PostCreateSerializer(serializers.ModelSerializer):
+    """게시글 생성용 시리얼라이저 - 응답에 id 포함"""
+    class Meta:
+        model = Post
+        fields = ['id', 'title', 'content', 'category', 'is_public']
+        read_only_fields = ['id']  # 생성 후 id 반환
+```
+
 ---
 
 ## 5. 실행 방법
 
 ### 방법 1: 자동 스크립트 (권장)
 
+**Ubuntu/WSL 환경에서 Docker 자동 설치 및 실행:**
+
 ```bash
-# 프로젝트 폴더에서
-./setup.sh
+# WSL 환경
+./auto-setup-wsl.sh
+
+# 일반 Ubuntu 환경
+./auto-setup.sh
 ```
+
+스크립트가 자동으로 다음을 수행합니다:
+- Docker 설치 (미설치 시)
+- 환경 변수 설정 (.env 파일 생성)
+- 컨테이너 빌드 및 실행
+- 데이터베이스 마이그레이션
 
 ### 방법 2: 수동 실행
 
+**이미 Docker가 설치된 환경:**
+
 ```bash
 # Docker 컨테이너 시작
-docker compose up -d
+docker compose up --build -d
 
-# 관리자 계정 생성
+# 관리자 계정 생성 (선택)
 docker compose exec backend python manage.py createsuperuser
 ```
 
@@ -209,27 +237,32 @@ docker compose exec backend python manage.py createsuperuser
 3. "로그인" 버튼 클릭
 4. JWT 토큰이 자동 저장됨
 
-### 6.3 게시글 작성
+### 6.3 게시글 작성 (파일 첨부 포함)
 
 1. 로그인 후 "글쓰기" 버튼 클릭
 2. 제목, 내용 입력
-3. "등록" 버튼 클릭
+3. **파일 첨부** (선택): "파일 첨부" 버튼으로 여러 파일 선택 가능
+   - 허용 형식: `.pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .jpg, .jpeg, .png, .gif, .zip`
+   - 최대 크기: 10MB
+4. "등록" 버튼 클릭
+5. 게시글 생성 후 파일 자동 업로드
 
-### 6.4 파일 업로드
+### 6.4 첨부파일 다운로드
 
-1. 게시글 상세 페이지에서 "파일 첨부" 클릭
-2. 파일 선택 (허용: pdf, doc, docx, xls, xlsx, jpg, png 등)
-3. 최대 10MB까지 업로드 가능
+1. 게시글 상세 페이지 하단 "첨부파일" 섹션 확인
+2. 파일 링크 클릭하여 다운로드
 
 ### 6.5 검색
 
-1. 상단 검색창에 검색어 입력
-2. 제목과 내용에서 검색됨
+1. 게시글 목록 상단 검색창에 검색어 입력
+2. 제목과 내용에서 통합 검색
+3. 검색 결과 즉시 표시
 
-### 6.6 댓글
+### 6.6 댓글 작성 및 삭제
 
-1. 게시글 상세 페이지 하단
-2. 댓글 내용 입력 후 "등록" 클릭
+1. 게시글 상세 페이지 하단 댓글 섹션
+2. 댓글 내용 입력 후 "등록" 버튼 클릭
+3. 본인 댓글은 "삭제" 버튼으로 삭제 가능
 
 ---
 
@@ -288,9 +321,89 @@ axes_accessattempt   # 로그인 시도 기록 (보안)
 | 분류 | 기술 |
 |------|------|
 | Backend | Django 4.2, Django REST Framework |
-| Frontend | React 18, Axios |
+| Frontend | React 18, Axios, React Router |
 | Database | MySQL 8.0 |
 | Authentication | JWT (Simple JWT) |
 | Security | django-axes (로그인 제한) |
 | Container | Docker, Docker Compose |
 | Server | Gunicorn (WSGI) |
+
+---
+
+## 10. 주요 수정 사항 (최근 업데이트)
+
+### 10.1 Docker 환경 자동 설치 스크립트
+
+**파일**: `auto-setup.sh`, `auto-setup-wsl.sh`
+
+- Ubuntu/WSL 환경에서 Docker 자동 설치
+- 환경 변수 자동 설정
+- 컨테이너 빌드 및 실행 자동화
+- WSL/일반 Ubuntu 환경 자동 감지 및 대응
+
+### 10.2 프론트엔드 API 통신 개선
+
+**파일**: `frontend/src/services/api.js`
+
+```javascript
+// Docker 환경과 로컬 환경 모두 지원
+const API_URL = process.env.REACT_APP_API_URL || '/api/';
+```
+
+- Docker Compose 환경에서 환경 변수 사용
+- 로컬 개발 환경에서 프록시 사용
+- 양쪽 환경에서 원활한 작동 보장
+
+### 10.3 게시글 생성 후 리다이렉션 수정
+
+**파일**: `backend/apps/core/serializers.py`
+
+```python
+class PostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ['id', 'title', 'content', 'category', 'is_public']
+        read_only_fields = ['id']  # 생성 후 id 반환
+```
+
+- 게시글 생성 API 응답에 `id` 필드 추가
+- 프론트엔드에서 생성된 게시글로 정상 리다이렉션
+
+### 10.4 파일 업로드 기능 UI 추가
+
+**파일**: `frontend/src/pages/PostCreate.js`
+
+- 게시글 작성 폼에 파일 첨부 input 추가
+- 다중 파일 선택 지원
+- 선택된 파일 목록 미리보기
+- 게시글 생성 후 파일 자동 업로드
+
+**파일**: `frontend/src/pages/PostDetail.js`
+
+- 첨부파일 목록 표시
+- 파일 다운로드 링크 제공
+- 파일 크기 표시
+
+**파일**: `frontend/src/App.css`
+
+```css
+.post-view-attachments {
+  padding: 16px 20px;
+  border-top: 1px solid #f0f0f0;
+  background: #f8f9fa;
+}
+
+.post-view-attachments a {
+  display: inline-flex;
+  padding: 8px 12px;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  word-break: break-all;
+  max-width: 100%;
+}
+```
+
+- 첨부파일 섹션 스타일 추가
+- 컨테이너를 넘어가지 않도록 최대 너비 제한
+- 긴 파일명 자동 줄바꿈
+- 클립 아이콘 자동 표시

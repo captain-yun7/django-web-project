@@ -34,30 +34,41 @@ django-web-project/
 
 ## 빠른 시작 (Docker)
 
-### 1. 필수 요구사항
+### 방법 1: 자동 설치 스크립트 (권장)
 
-- Docker
-- Docker Compose
-
-### 2. 프로젝트 실행
+**Ubuntu 환경에서 Docker 자동 설치부터 실행까지:**
 
 ```bash
 # 저장소 클론
 git clone <repository-url>
 cd django-web-project
 
-# Docker 컨테이너 빌드 및 실행
-docker-compose up --build
+# WSL 환경
+./auto-setup-wsl.sh
+
+# 일반 Ubuntu 환경
+./auto-setup.sh
 ```
 
-### 3. 접속 URL
+### 방법 2: 수동 실행
+
+**이미 Docker가 설치되어 있는 경우:**
+
+```bash
+# Docker 컨테이너 빌드 및 실행
+docker compose up --build -d
+
+# 관리자 계정 생성 (선택)
+docker compose exec backend python manage.py createsuperuser
+```
+
+### 접속 URL
 
 | 서비스 | URL | 설명 |
 |--------|-----|------|
-| 웹 애플리케이션 | http://localhost | Nginx를 통한 메인 접속 |
-| React (직접) | http://localhost:3000 | 프론트엔드 개발 서버 |
-| Django API (직접) | http://localhost:8000 | 백엔드 API 서버 |
-| Django Admin | http://localhost/admin | 관리자 페이지 |
+| React 프론트엔드 | http://localhost:3000 | 메인 웹 애플리케이션 |
+| Django API | http://localhost:8000/api/ | 백엔드 REST API |
+| Django Admin | http://localhost:8000/admin/ | 관리자 페이지 |
 
 ## 환경 변수 설정
 
@@ -93,11 +104,18 @@ REACT_APP_API_URL=http://localhost:8000/api
 - `PUT /api/accounts/profile/` - 프로필 수정
 
 ### 게시판
-- `GET /api/posts/` - 게시글 목록
+- `GET /api/posts/` - 게시글 목록 (페이징, 검색 지원)
 - `POST /api/posts/` - 게시글 작성
 - `GET /api/posts/{id}/` - 게시글 상세
-- `PUT /api/posts/{id}/` - 게시글 수정
+- `PATCH /api/posts/{id}/` - 게시글 수정
 - `DELETE /api/posts/{id}/` - 게시글 삭제
+- `POST /api/posts/{id}/upload_file/` - 파일 업로드
+- `GET /api/search/?q=검색어` - 통합 검색
+
+### 댓글
+- `GET /api/posts/{id}/comments/` - 댓글 목록
+- `POST /api/posts/{id}/comments/` - 댓글 작성
+- `DELETE /api/posts/{id}/comments/{comment_id}/` - 댓글 삭제
 
 ## 개발 가이드
 

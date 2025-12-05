@@ -67,4 +67,5 @@ class PostCreateSerializer(serializers.ModelSerializer):
     """게시글 생성용 시리얼라이저"""
     class Meta:
         model = Post
-        fields = ['title', 'content', 'category', 'is_public']
+        fields = ['id', 'title', 'content', 'category', 'is_public']
+        read_only_fields = ['id']

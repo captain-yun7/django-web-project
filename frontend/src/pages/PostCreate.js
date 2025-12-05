@@ -10,6 +10,7 @@ const PostCreate = () => {
     title: '',
     content: '',
   });
+  const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -25,13 +26,32 @@ const PostCreate = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    setFiles(selectedFiles);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
+      // 1. 게시글 생성
       const post = await postAPI.create(formData);
+
+      // 2. 파일 업로드 (있는 경우)
+      if (files.length > 0) {
+        for (const file of files) {
+          try {
+            await postAPI.uploadFile(post.id, file);
+          } catch (uploadErr) {
+            console.error('파일 업로드 실패:', uploadErr);
+            // 파일 업로드 실패해도 게시글은 생성되었으므로 계속 진행
+          }
+        }
+      }
+
       navigate(`/posts/${post.id}`);
     } catch (err) {
       const errorData = err.response?.data;
@@ -75,6 +95,21 @@ const PostCreate = () => {
               required
               placeholder="내용을 입력하세요"
             />
+          </div>
+
+          <div className="form-row">
+            <label>파일 첨부</label>
+            <input
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.zip"
+            />
+            {files.length > 0 && (
+              <div style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
+                선택된 파일: {files.map(f => f.name).join(', ')}
+              </div>
+            )}
           </div>
         </form>
       </div>

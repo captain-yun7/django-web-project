@@ -7,8 +7,10 @@
 
 import axios from 'axios';
 
-// API 기본 URL 설정 (프록시 사용 시 상대 경로)
-const API_URL = '/api/';
+// API 기본 URL 설정
+// Docker 환경: REACT_APP_API_URL 환경 변수 사용
+// 로컬 개발: 프록시 사용 (/api/)
+const API_URL = process.env.REACT_APP_API_URL || '/api/';
 
 // axios 인스턴스 생성
 const api = axios.create({
