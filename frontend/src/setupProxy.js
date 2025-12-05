@@ -10,7 +10,12 @@ module.exports = function(app) {
     createProxyMiddleware({
       target: target,
       changeOrigin: true,
-      pathRewrite: { '^/api': '/api' },  // /api 경로 유지
+      on: {
+        proxyReq: (proxyReq, req, res) => {
+          // 원본 경로 그대로 유지 (/api 포함)
+          proxyReq.path = req.originalUrl;
+        },
+      },
     })
   );
 };
