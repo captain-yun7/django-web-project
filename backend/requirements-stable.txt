@@ -1,0 +1,31 @@
+# Django 프레임워크 (안정 버전)
+Django==4.2.16
+
+# Django REST Framework (API용)
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+
+# MySQL 데이터베이스 연결
+mysqlclient==2.2.4
+
+# 프로덕션 서버
+gunicorn==21.2.0
+
+# 보안 관련
+django-ratelimit==4.1.0
+django-axes==6.4.0
+
+# 인증 관련
+djangorestframework-simplejwt==5.3.1
+
+# 파일 업로드
+Pillow==10.4.0
+
+# 환경 변수 관리
+python-dotenv==1.0.1
+
+# 유틸리티
+django-filter==24.3
+
+# 중첩 라우터
+drf-nested-routers==0.94.1

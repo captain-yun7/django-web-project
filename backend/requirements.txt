@@ -5,8 +5,8 @@ Django>=4.2,<5.0
 djangorestframework>=3.14.0
 django-cors-headers>=4.3.0
 
-# MySQL 데이터베이스 연결
-mysqlclient>=2.2.0
+# MySQL 데이터베이스 연결 (PyMySQL - 순수 Python, 설치 쉬움)
+PyMySQL>=1.1.0
 
 # 프로덕션 서버
 gunicorn>=21.2.0
