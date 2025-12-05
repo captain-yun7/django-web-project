@@ -94,8 +94,8 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME', 'webapp_db'),
         'USER': os.environ.get('DB_USER', 'root'),
         'PASSWORD': os.environ.get('DB_PASSWORD', '123123'),
-        'HOST': os.environ.get('DB_HOST', 'db'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '3218'),
         'OPTIONS': {
             'charset': 'utf8mb4',
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -178,13 +178,14 @@ SIMPLE_JWT = {
 # CORS 설정 (React 프론트엔드 연동)
 # =====================================
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:1218",
     "http://localhost:3000",
     "http://localhost:3001",
     "http://localhost:3002",
     "http://localhost:3003",
     "http://localhost:3004",
     "http://localhost:3005",
-    "http://localhost:3006"    
+    "http://localhost:3006"
 ]
 CORS_ALLOW_CREDENTIALS = True
 

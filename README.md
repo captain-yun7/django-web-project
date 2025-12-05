@@ -32,43 +32,46 @@ django-web-project/
 - **Server**: Gunicorn, Nginx
 - **Container**: Docker, Docker Compose
 
-## 빠른 시작 (Docker)
+## 빠른 시작 (로컬 개발)
 
-### 방법 1: 자동 설치 스크립트 (권장)
+### 권장: 로컬 개발 환경 (MySQL만 Docker 사용)
 
-**Ubuntu 환경에서 Docker 자동 설치부터 실행까지:**
+**MySQL은 Docker로, 백엔드/프론트엔드는 로컬에서 실행:**
 
 ```bash
 # 저장소 클론
 git clone <repository-url>
 cd django-web-project
 
-# WSL 환경
-./auto-setup-wsl.sh
+# 로컬 환경 준비 (MySQL Docker + 의존성 설치)
+./run-local.sh
 
-# 일반 Ubuntu 환경
-./auto-setup.sh
-```
+# 백엔드 실행 (포트 8218) - 새 터미널
+./run-backend.sh
 
-### 방법 2: 수동 실행
-
-**이미 Docker가 설치되어 있는 경우:**
-
-```bash
-# Docker 컨테이너 빌드 및 실행
-docker compose up --build -d
-
-# 관리자 계정 생성 (선택)
-docker compose exec backend python manage.py createsuperuser
+# 프론트엔드 실행 (포트 1218) - 새 터미널
+./run-frontend.sh
 ```
 
 ### 접속 URL
 
 | 서비스 | URL | 설명 |
 |--------|-----|------|
-| React 프론트엔드 | http://localhost:3000 | 메인 웹 애플리케이션 |
-| Django API | http://localhost:8000/api/ | 백엔드 REST API |
-| Django Admin | http://localhost:8000/admin/ | 관리자 페이지 |
+| React 프론트엔드 | http://localhost:1218 | 메인 웹 애플리케이션 |
+| Django API | http://localhost:8218/api/ | 백엔드 REST API |
+| Django Admin | http://localhost:8218/admin/ | 관리자 페이지 |
+
+### 선택: 전체 Docker 환경 (레거시)
+
+**전체 서비스를 Docker로 실행 (개발 시 권장하지 않음):**
+
+```bash
+# WSL 환경
+./auto-setup-wsl.sh
+
+# 일반 Ubuntu 환경
+./auto-setup.sh
+```
 
 ## 환경 변수 설정
 
@@ -119,38 +122,39 @@ REACT_APP_API_URL=http://localhost:8000/api
 
 ## 개발 가이드
 
-### 백엔드 (로컬 개발)
+### 시스템 요구사항
 
 ```bash
 # 시스템 의존성 설치 (Ubuntu/Debian)
 sudo apt update && sudo apt install -y pkg-config python3-dev default-libmysqlclient-dev build-essential
-
-cd backend
-
-# 가상환경 생성 및 활성화
-python3 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# 의존성 설치
-pip install -r requirements.txt
-
-# 데이터베이스 마이그레이션
-python3 manage.py migrate
-
-# 개발 서버 실행
-python3 manage.py runserver
 ```
 
-### 프론트엔드 (로컬 개발)
+### 로컬 개발 환경 구성
+
+로컬 개발 시에는 `run-local.sh` 스크립트를 먼저 실행하여 환경을 준비합니다:
 
 ```bash
+# 1. MySQL Docker 시작 + 의존성 설치
+./run-local.sh
+
+# 2. 백엔드 실행 (포트 8218)
+./run-backend.sh
+
+# 3. 프론트엔드 실행 (포트 1218)
+./run-frontend.sh
+```
+
+### 수동 실행 (고급 사용자)
+
+```bash
+# 백엔드 (포트 8218)
+cd backend
+source venv/bin/activate
+python3 manage.py runserver 8218
+
+# 프론트엔드 (포트 1218)
 cd frontend
-
-# 의존성 설치
-npm install
-
-# 개발 서버 실행
-npm start
+npm start  # PORT=1218이 package.json에 설정됨
 ```
 
 ## Docker 명령어
