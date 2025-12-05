@@ -121,7 +121,10 @@ const PostDetail = () => {
           <Link to="/posts" className="btn">목록</Link>
           <div>
             {isAuthor && (
-              <button onClick={handleDelete} className="btn btn-danger">삭제</button>
+              <>
+                <Link to={`/posts/${id}/edit`} className="btn btn-primary">수정</Link>
+                <button onClick={handleDelete} className="btn btn-danger">삭제</button>
+              </>
             )}
           </div>
         </div>

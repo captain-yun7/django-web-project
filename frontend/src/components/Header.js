@@ -22,6 +22,7 @@ const Header = () => {
           {isAuthenticated ? (
             <>
               <Link to="/posts/create">글쓰기</Link>
+              <Link to="/profile">내정보</Link>
               <span style={{ color: '#fff', fontSize: '12px' }}>{user?.username}</span>
               <button onClick={handleLogout}>로그아웃</button>
             </>

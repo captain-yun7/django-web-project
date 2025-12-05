@@ -13,6 +13,8 @@ import Register from './pages/Register';
 import PostList from './pages/PostList';
 import PostDetail from './pages/PostDetail';
 import PostCreate from './pages/PostCreate';
+import PostEdit from './pages/PostEdit';
+import Profile from './pages/Profile';
 import './App.css';
 
 function App() {
@@ -27,8 +29,10 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/posts" element={<PostList />} />
-              <Route path="/posts/:id" element={<PostDetail />} />
               <Route path="/posts/create" element={<PostCreate />} />
+              <Route path="/posts/:id" element={<PostDetail />} />
+              <Route path="/posts/:id/edit" element={<PostEdit />} />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </main>
         </div>
