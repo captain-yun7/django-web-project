@@ -17,10 +17,10 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 echo -e "\n${YELLOW}기존 MySQL에 데이터베이스를 생성합니다.${NC}"
-echo -e "${YELLOW}MySQL root 비밀번호를 입력하세요:${NC}"
+echo -e "${YELLOW}MySQL root 비밀번호 (기본값: 123123):${NC}"
 
-# MySQL에 데이터베이스 생성
-mysql -u root -p <<EOF
+# MySQL에 데이터베이스 생성 (비밀번호 123123)
+mysql -u root -p123123 <<EOF 2>/dev/null || mysql -u root -p <<EOF
 -- 데이터베이스 생성
 CREATE DATABASE IF NOT EXISTS webapp_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

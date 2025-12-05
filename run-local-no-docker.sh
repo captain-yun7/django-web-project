@@ -19,16 +19,16 @@ NC='\033[0m' # No Color
 
 # 1. MySQL 상태 확인
 echo -e "\n${YELLOW}[1/4] MySQL 상태 확인 중...${NC}"
-if ! sudo service mysql status > /dev/null 2>&1; then
-    echo -e "${YELLOW}MySQL이 실행 중이 아닙니다. 시작합니다...${NC}"
-    sudo service mysql start
-    sleep 2
-fi
 
 # MySQL 연결 테스트
 if ! mysql -u root -p123123 -e "SELECT 1;" > /dev/null 2>&1; then
     echo -e "${RED}MySQL에 연결할 수 없습니다.${NC}"
-    echo -e "${YELLOW}먼저 ./install-mysql-local.sh를 실행하세요.${NC}"
+    echo -e "${YELLOW}MySQL이 실행 중인지 확인하세요:${NC}"
+    echo "  - Windows: MySQL 서비스가 실행 중인지 확인"
+    echo "  - WSL: Windows에서 MySQL 실행"
+    echo "  - Linux: service mysql status"
+    echo ""
+    echo -e "${YELLOW}또는 먼저 ./setup-database.sh를 실행하세요.${NC}"
     exit 1
 fi
 
