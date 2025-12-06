@@ -332,6 +332,27 @@ a {
   background: #e0352b;
 }
 
+.btn-like {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  color: #666;
+}
+
+.btn-like:hover {
+  background: #fff5f5;
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+.btn-liked {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.btn-liked:hover {
+  background: #ff5252;
+}
+
 /* 게시글 상세 */
 .post-view {
   background: #fff;

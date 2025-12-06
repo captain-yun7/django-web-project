@@ -65,6 +65,19 @@ const PostDetail = () => {
     }
   };
 
+  const handleLike = async () => {
+    if (!isAuthenticated) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    try {
+      const result = await postAPI.like(id);
+      setPost({ ...post, likes_count: result.likes_count, is_liked: result.liked });
+    } catch (error) {
+      alert('좋아요 처리에 실패했습니다.');
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('ko-KR', {
@@ -95,6 +108,7 @@ const PostDetail = () => {
             <span>{post.author_name}</span>
             <span>{formatDate(post.created_at)}</span>
             <span>조회 {post.views}</span>
+            <span>좋아요 {post.likes_count || 0}</span>
           </div>
         </div>
 
@@ -120,6 +134,12 @@ const PostDetail = () => {
         <div className="post-view-actions">
           <Link to="/posts" className="btn">목록</Link>
           <div>
+            <button
+              onClick={handleLike}
+              className={`btn ${post.is_liked ? 'btn-liked' : 'btn-like'}`}
+            >
+              {post.is_liked ? '♥ 좋아요 취소' : '♡ 좋아요'}
+            </button>
             {isAuthor && (
               <>
                 <Link to={`/posts/${id}/edit`} className="btn btn-primary">수정</Link>

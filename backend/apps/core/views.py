@@ -85,6 +85,27 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def like(self, request, pk=None):
+        """
+        좋아요 토글 API
+        - POST /api/posts/{id}/like/
+        """
+        post = self.get_object()
+        user = request.user
+
+        if user in post.likes.all():
+            post.likes.remove(user)
+            liked = False
+        else:
+            post.likes.add(user)
+            liked = True
+
+        return Response({
+            'liked': liked,
+            'likes_count': post.likes.count()
+        })
+
     @action(detail=True, methods=['post'], parser_classes=[MultiPartParser, FormParser])
     def upload_file(self, request, pk=None):
         """

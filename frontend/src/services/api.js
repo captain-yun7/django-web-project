@@ -153,6 +153,12 @@ export const postAPI = {
     const response = await api.get('search/', { params: { q: query } });
     return response.data;
   },
+
+  // 좋아요 토글
+  like: async (id) => {
+    const response = await api.post(`posts/${id}/like/`);
+    return response.data;
+  },
 };
 
 // =====================================

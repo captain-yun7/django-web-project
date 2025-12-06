@@ -47,6 +47,12 @@ class Post(models.Model):
         verbose_name='카테고리'
     )
     views = models.PositiveIntegerField('조회수', default=0)
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='liked_posts',
+        blank=True,
+        verbose_name='좋아요'
+    )
     is_public = models.BooleanField('공개여부', default=True)
     created_at = models.DateTimeField('작성일', auto_now_add=True)
     updated_at = models.DateTimeField('수정일', auto_now=True)

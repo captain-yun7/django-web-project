@@ -37,12 +37,13 @@ class PostListSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='author.username', read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
     comment_count = serializers.IntegerField(source='comments.count', read_only=True)
+    likes_count = serializers.IntegerField(source='likes.count', read_only=True)
 
     class Meta:
         model = Post
         fields = [
             'id', 'title', 'author', 'author_name', 'category',
-            'category_name', 'views', 'comment_count', 'created_at'
+            'category_name', 'views', 'comment_count', 'likes_count', 'created_at'
         ]
 
 
@@ -52,15 +53,23 @@ class PostDetailSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name', read_only=True)
     attachments = AttachmentSerializer(many=True, read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
+    likes_count = serializers.IntegerField(source='likes.count', read_only=True)
+    is_liked = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
         fields = [
             'id', 'title', 'content', 'author', 'author_name',
             'category', 'category_name', 'views', 'is_public',
-            'attachments', 'comments', 'created_at', 'updated_at'
+            'likes_count', 'is_liked', 'attachments', 'comments', 'created_at', 'updated_at'
         ]
         read_only_fields = ['author', 'views', 'created_at', 'updated_at']
+
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.likes.filter(id=request.user.id).exists()
+        return False
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
