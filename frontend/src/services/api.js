@@ -148,6 +148,12 @@ export const postAPI = {
     return response.data;
   },
 
+  // 파일 삭제
+  deleteFile: async (postId, fileId) => {
+    const response = await api.delete(`posts/${postId}/delete_file/${fileId}/`);
+    return response.data;
+  },
+
   // 검색
   search: async (query) => {
     const response = await api.get('search/', { params: { q: query } });

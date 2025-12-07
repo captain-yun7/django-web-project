@@ -12,6 +12,7 @@ const PostEdit = () => {
     content: '',
   });
   const [attachments, setAttachments] = useState([]);
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -75,6 +76,33 @@ const PostEdit = () => {
     }
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const newAttachment = await postAPI.uploadFile(id, file);
+      setAttachments([...attachments, newAttachment]);
+    } catch (err) {
+      alert('파일 업로드에 실패했습니다.');
+    } finally {
+      setUploading(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleFileDelete = async (fileId) => {
+    if (!window.confirm('파일을 삭제하시겠습니까?')) return;
+
+    try {
+      await postAPI.deleteFile(id, fileId);
+      setAttachments(attachments.filter(f => f.id !== fileId));
+    } catch (err) {
+      alert('파일 삭제에 실패했습니다.');
+    }
+  };
+
   if (loading) {
     return <div className="loading">로딩 중...</div>;
   }
@@ -111,20 +139,36 @@ const PostEdit = () => {
           </div>
         </form>
 
-        {attachments.length > 0 && (
-          <div className="edit-attachments">
-            <label>첨부파일</label>
+        <div className="edit-attachments">
+          <label>첨부파일</label>
+          {attachments.length > 0 && (
             <ul className="attachment-list">
               {attachments.map((file) => (
                 <li key={file.id}>
                   <a href={file.file} target="_blank" rel="noopener noreferrer">
                     {file.original_name} ({(file.file_size / 1024).toFixed(1)} KB)
                   </a>
+                  <button
+                    type="button"
+                    className="btn-file-delete"
+                    onClick={() => handleFileDelete(file.id)}
+                  >
+                    삭제
+                  </button>
                 </li>
               ))}
             </ul>
+          )}
+          <div className="file-upload-row">
+            <input
+              type="file"
+              id="file-upload"
+              onChange={handleFileUpload}
+              disabled={uploading}
+            />
+            {uploading && <span className="uploading-text">업로드 중...</span>}
           </div>
-        )}
+        </div>
       </div>
 
       <div className="write-form-actions">

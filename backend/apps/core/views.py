@@ -141,6 +141,27 @@ class PostViewSet(viewsets.ModelViewSet):
         )
         return Response(AttachmentSerializer(attachment).data, status=status.HTTP_201_CREATED)
 
+    @action(detail=True, methods=['delete'], url_path='delete_file/(?P<file_id>[^/.]+)',
+            permission_classes=[permissions.IsAuthenticated])
+    def delete_file(self, request, pk=None, file_id=None):
+        """
+        파일 삭제 API
+        - DELETE /api/posts/{id}/delete_file/{file_id}/
+        """
+        post = self.get_object()
+
+        # 작성자 본인만 삭제 가능
+        if post.author != request.user:
+            return Response({"error": "삭제 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            attachment = Attachment.objects.get(id=file_id, post=post)
+            attachment.file.delete()  # 실제 파일 삭제
+            attachment.delete()  # DB 레코드 삭제
+            return Response({"message": "파일이 삭제되었습니다."}, status=status.HTTP_200_OK)
+        except Attachment.DoesNotExist:
+            return Response({"error": "파일을 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     """
