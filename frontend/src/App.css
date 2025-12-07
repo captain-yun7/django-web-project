@@ -452,7 +452,13 @@ a {
   padding: 16px 20px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-top: 1px solid #f0f0f0;
+}
+
+.post-action-buttons {
+  display: flex;
+  gap: 8px;
 }
 
 /* 댓글 */

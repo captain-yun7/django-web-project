@@ -97,16 +97,6 @@ const Profile = () => {
               <span className="profile-label">이메일</span>
               <span className="profile-value">{profile?.email}</span>
             </div>
-            <div className="profile-row">
-              <span className="profile-label">이름</span>
-              <span className="profile-value">{profile?.name || '-'}</span>
-            </div>
-            <div className="profile-row">
-              <span className="profile-label">가입일</span>
-              <span className="profile-value">
-                {profile?.date_joined ? new Date(profile.date_joined).toLocaleDateString('ko-KR') : '-'}
-              </span>
-            </div>
           </div>
         </div>
       </div>

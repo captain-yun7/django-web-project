@@ -133,7 +133,7 @@ const PostDetail = () => {
 
         <div className="post-view-actions">
           <Link to="/posts" className="btn">목록</Link>
-          <div>
+          <div className="post-action-buttons">
             <button
               onClick={handleLike}
               className={`btn ${post.is_liked ? 'btn-liked' : 'btn-like'}`}
