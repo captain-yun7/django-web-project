@@ -78,6 +78,7 @@ const PostList = () => {
               <th className="author">글쓴이</th>
               <th className="date">날짜</th>
               <th className="views">조회</th>
+              <th className="likes">좋아요</th>
             </tr>
           </thead>
           <tbody>
@@ -95,6 +96,11 @@ const PostList = () => {
                 <td className="author">{post.author_name}</td>
                 <td className="date">{formatDate(post.created_at)}</td>
                 <td className="views">{post.views}</td>
+                <td className="likes">
+                  <span className={`like-indicator ${post.likes_count > 0 ? 'has-likes' : ''}`}>
+                    ♥ {post.likes_count || 0}
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>

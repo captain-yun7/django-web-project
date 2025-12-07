@@ -10,6 +10,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.conf import settings
+from django.db import models
 import os
 
 from .models import Category, Post, Attachment, Comment

@@ -203,6 +203,19 @@ a {
   content: "조회 ";
 }
 
+.post-table td.likes {
+  font-size: 13px;
+  color: #8e8e8e;
+}
+
+.like-indicator {
+  color: #ccc;
+}
+
+.like-indicator.has-likes {
+  color: #ff6b6b;
+}
+
 /* 검색 */
 .search-box {
   padding: 16px 0;
