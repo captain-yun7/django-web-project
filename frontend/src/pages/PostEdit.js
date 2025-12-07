@@ -11,6 +11,7 @@ const PostEdit = () => {
     title: '',
     content: '',
   });
+  const [attachments, setAttachments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -37,6 +38,7 @@ const PostEdit = () => {
         title: data.title,
         content: data.content,
       });
+      setAttachments(data.attachments || []);
     } catch (error) {
       console.error('게시글 로드 실패:', error);
       alert('게시글을 찾을 수 없습니다.');
@@ -108,6 +110,21 @@ const PostEdit = () => {
             />
           </div>
         </form>
+
+        {attachments.length > 0 && (
+          <div className="edit-attachments">
+            <label>첨부파일</label>
+            <ul className="attachment-list">
+              {attachments.map((file) => (
+                <li key={file.id}>
+                  <a href={file.file} target="_blank" rel="noopener noreferrer">
+                    {file.original_name} ({(file.file_size / 1024).toFixed(1)} KB)
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       <div className="write-form-actions">

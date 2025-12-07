@@ -739,3 +739,44 @@ a {
   color: #0066ff;
   font-weight: 500;
 }
+
+/* 수정 페이지 첨부파일 */
+.edit-attachments {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.edit-attachments label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.attachment-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.attachment-list li {
+  padding: 8px 0;
+}
+
+.attachment-list a {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  color: #0066ff;
+  font-size: 13px;
+}
+
+.attachment-list a::before {
+  content: "📎 ";
+  margin-right: 4px;
+}
