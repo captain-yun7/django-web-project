@@ -173,9 +173,7 @@ class SearchView(generics.ListAPIView):
         query = self.request.query_params.get('q', '')
         if query:
             return Post.objects.filter(
-                is_public=True
-            ).filter(
-                models.Q(title__icontains=query) |
-                models.Q(content__icontains=query)
+                is_public=True,
+                title__icontains=query
             )
         return Post.objects.none()
